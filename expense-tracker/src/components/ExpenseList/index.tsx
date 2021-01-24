@@ -7,10 +7,6 @@ import { List, Popconfirm } from 'antd'
 
 class ExpenseList extends React.Component<Props, State> {
 
-  confirmDelete = () => {
-    console.log("Deleting")
-  }
-
   render() {
 
     let { expenseList } = this.props;
@@ -26,7 +22,7 @@ class ExpenseList extends React.Component<Props, State> {
                 'Edit', 
                 <Popconfirm
                   title="Are you sure to delete this expense?"
-                  onConfirm={this.confirmDelete}
+                  onConfirm={() => this.props.deleteHandler(item._id)}
                   okText="Yes"
                   cancelText="No"
                 >

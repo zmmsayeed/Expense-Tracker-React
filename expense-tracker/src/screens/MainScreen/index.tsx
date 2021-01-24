@@ -6,6 +6,10 @@ import { apiUrl } from '../../config';
 // importing components
 import Navbar from '../../components/Navbar';
 import ExpenseList from '../../components/ExpenseList';
+import { Expense } from '../../interface/expense';
+
+// importing antd components
+import { message } from 'antd';
 
 
 class MainScreen extends React.Component<Props, State> {
@@ -29,6 +33,26 @@ class MainScreen extends React.Component<Props, State> {
             })
     }
 
+    deleteHandler = (id: string) => {
+        console.log("Deleting: ", id);
+
+        let filteredExpense: Expense[] = this.state.expenses.filter(item => item._id !== id);
+        this.setState({ expenses: filteredExpense }, () => {
+            axios.post(apiUrl + 'api/expense/delete', {
+                toDelete: id
+            })
+            .then((response) => {
+                if(response.data.deletedCount > 0) {
+                    message.success("Expense Deleted Successfully!")
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+                message.error("Could not Delete!")
+            })
+        })
+    }
+
     render() {
         return(
             <div>
@@ -38,7 +62,9 @@ class MainScreen extends React.Component<Props, State> {
                     <div className="row">
                         <div className="col-md-6">
                             <h2>Your Expenses:</h2>
-                            <ExpenseList expenseList={this.state.expenses} />
+                            <ExpenseList expenseList={this.state.expenses} deleteHandler={
+                                (id: string) => this.deleteHandler(id)
+                            } />
                         </div>
                     </div>
                 </div>
