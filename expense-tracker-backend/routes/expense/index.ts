@@ -42,4 +42,24 @@ router.get('/getAll', async (req: Request, res: Response) => {
     }
 })
 
+router.post('/delete', async (req: Request, res: Response) => {
+    try {
+        let toDelete: string = req.body.toDelete;
+        if(toDelete) {
+            let deleted = await Expense.deleteOne({ _id: toDelete });
+            res.status(201).send({ 
+                success: true,
+                deletedCount: deleted.deletedCount
+            });
+        }
+        
+    } catch(err) {
+        res.status(400).send({
+            success: false,
+            error: err
+        });
+    }
+})
+
+
 export default router;
